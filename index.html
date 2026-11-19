@@ -1,0 +1,644 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f5f7f4">
+  <title>เข้าสู่ระบบ</title>
+  <style>
+    :root { font-family: "Segoe UI", Tahoma, sans-serif; color: #263b35; background: #f5f7fb; font-synthesis: none; --green: #528b78; --green-dark: #3f7562; --mint: #e5f4ed; --soft-lilac: #eeeafb; --soft-pink: #f8e9ed; --red: #b96b78; }
+    * { box-sizing: border-box; }
+    body { margin: 0; min-height: 100vh; display: grid; place-items: center; padding: 24px; background: radial-gradient(ellipse at 10% 0%, #e8f4ee 0, transparent 42%), radial-gradient(ellipse at 100% 10%, #f0edfa 0, transparent 38%), #f5f7fb; }
+    body:has(#home-page:not([hidden])) { padding: 0; place-items: stretch; background: #f5f7fb; }
+    .login { width: min(100%, 420px); padding: 42px; background: #fff; border: 1px solid #dce9df; border-radius: 22px; box-shadow: 0 20px 60px #183e2b14; }
+    .admin-login { width: min(100%, 420px); padding: 32px; background: #fff; border: 1px solid #dce9df; border-radius: 22px; box-shadow: 0 20px 60px #183e2b14; }
+    .home-login { padding: 8px 2px; border: 0; background: transparent; color: #756c9e; font: inherit; font-weight: 600; cursor: pointer; }
+    .text-link { padding: 8px 2px; border: 0; background: transparent; color: #528b78; font: inherit; cursor: pointer; }
+    .text-link:hover { text-decoration: underline; }
+    .mark { width: 48px; height: 48px; display: grid; place-items: center; border-radius: 15px; color: #fff; background: linear-gradient(145deg, #27815c, #124b37); font-size: 23px; box-shadow: 0 6px 16px #17644730; }
+    h1 { margin: 26px 0 8px; font-size: 28px; letter-spacing: -.5px; }
+    .intro { margin: 0 0 30px; color: #778078; font-size: 15px; }
+    label { display: block; margin: 0 0 8px; font-size: 14px; font-weight: 600; }
+    .field { margin-bottom: 20px; }
+    input { width: 100%; height: 50px; padding: 0 14px; border: 1px solid #dce2dc; border-radius: 10px; outline: none; background: white; color: #202820; font: inherit; transition: border-color .15s, box-shadow .15s; }
+    input::placeholder { color: #a4ada5; }
+    input:focus { border-color: var(--green); box-shadow: 0 0 0 3px #1764471c; }
+    .password-wrap { position: relative; }
+    .password-wrap input { padding-right: 62px; }
+    .toggle { position: absolute; top: 0; right: 10px; height: 50px; padding: 0 5px; border: 0; background: none; color: var(--green); cursor: pointer; font: inherit; font-size: 13px; }
+    .submit { width: 100%; height: 50px; margin-top: 5px; border: 0; border-radius: 10px; background: linear-gradient(110deg, #176447, #25825a); color: white; cursor: pointer; font: inherit; font-weight: 600; box-shadow: 0 7px 16px #17644724; transition: transform .18s, box-shadow .18s; }
+    .submit:hover { transform: translateY(-1px); box-shadow: 0 10px 20px #17644730; }
+    .message { min-height: 22px; margin: 14px 0 0; color: var(--green); text-align: center; font-size: 14px; }
+    [hidden] { display: none !important; }
+    .home { display: flex; flex-direction: column; width: 100%; max-width: none; padding: 0; background: transparent; border: 0; border-radius: 0; box-shadow: none; }
+    .home > :not(.site-hero) { width: min(calc(100% - 80px), 1280px); margin-right: auto; margin-left: auto; }
+    .home-header { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 22px; }
+    .home-header h1 { margin: 0 0 5px; }
+    .home-header p { margin: 0; color: #778078; }
+    .site-hero { --hero-height: 400px; position: relative; order: -1; width: 100%; height: clamp(300px, 38vw, var(--hero-height)); max-height: 480px; margin: 0 0 30px; overflow: hidden; border-radius: 0; isolation: isolate; background: radial-gradient(ellipse at 78% 18%, #c4d7a7 0, transparent 30%), radial-gradient(ellipse at 12% 90%, #7ea98a 0, transparent 42%), linear-gradient(120deg, #173f35, #47785a 54%, #b6bd8a); box-shadow: 0 18px 38px #183e2b24; }
+    .site-hero-image { position: absolute; z-index: -2; inset: 0; width: 100%; height: 100%; object-fit: cover; transform-origin: center; transition: transform .08s linear; }
+    .site-hero::after { position: absolute; z-index: -1; inset: 0; content: ''; background: linear-gradient(90deg, #ffffff38 0%, #ffffff18 42%, #ffffff08 100%), linear-gradient(0deg, #f5f7f430, transparent 58%); }
+    .site-hero-copy { position: absolute; left: clamp(22px, 5vw, 58px); bottom: clamp(24px, 5vw, 52px); width: min(72%, 620px); color: #fff; text-shadow: 0 2px 18px #071c18a6; }
+    .site-hero-kicker { margin: 0 0 10px; color: #d2e6c9; font-size: 13px; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; }
+    .site-hero-copy h2 { margin: 0; font-size: clamp(30px, 5vw, 52px); line-height: 1.12; letter-spacing: -.03em; }
+    .site-hero-copy p:last-child { max-width: 520px; margin: 12px 0 0; color: #f3f6ec; font-size: clamp(14px, 2vw, 17px); line-height: 1.65; }
+    .header-preview { position: relative; min-height: 150px; overflow: hidden; border-radius: 12px; background: linear-gradient(120deg, #173f35, #47785a 54%, #b6bd8a); cursor: grab; touch-action: none; }
+    .header-preview.is-dragging { cursor: grabbing; }
+    .header-preview img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transform-origin: center; transition: transform .08s linear; }
+    .header-preview span { position: absolute; left: 16px; bottom: 14px; color: white; font-weight: 700; text-shadow: 0 1px 8px #071c18; }
+    .logout { padding: 10px 16px; border: 1px solid #dce2dc; border-radius: 9px; background: white; color: #287653; font: inherit; cursor: pointer; }
+    .gallery-layout { display: grid; grid-template-columns: minmax(0, 1fr) 126px; align-items: stretch; gap: 16px; }
+    .hero-image { display: block; width: 100%; height: clamp(240px, 52vw, 520px); object-fit: contain; border-radius: 14px; background: #e8ece7; }
+    .photo-info h2 { margin: 18px 0 6px; font-size: 22px; }
+    .photo-info p { margin: 0; color: #778078; line-height: 1.65; white-space: pre-wrap; overflow-wrap: anywhere; }
+    .thumbs { display: flex; flex-direction: column; gap: 10px; max-height: clamp(240px, 52vw, 520px); overflow-y: auto; overflow-x: hidden; padding: 2px 5px 2px 2px; }
+    .thumb { flex: 0 0 84px; width: 100%; padding: 4px; border: 2px solid transparent; border-radius: 12px; background: transparent; cursor: pointer; }
+    .thumb[aria-pressed="true"] { border-color: #287653; }
+    .thumb img { display: block; width: 100%; height: 100%; object-fit: cover; border-radius: 7px; }
+    .thumb:focus-visible, button:focus-visible { outline: 3px solid #28765355; outline-offset: 2px; }
+    .video-section { margin: 0 0 38px; padding: 0 0 32px; border-bottom: 1px solid #e7eee9; }
+    .video-player { display: block; width: 100%; max-height: 540px; border-radius: 14px; background: #18231f; }
+    .video-list { display: grid; gap: 12px; margin-top: 16px; }
+    #home-video-list { display: flex; gap: 0; overflow: hidden; margin-top: 16px; }
+    #home-video-list .video-item { display: flex; flex: 0 0 100%; min-width: 0; align-items: center; justify-content: center; padding: 0; border: 0; transition: transform .65s ease; }
+    .video-item { display: grid; grid-template-columns: 120px 1fr auto; align-items: center; gap: 14px; padding: 12px; border: 1px solid #e4eee6; border-radius: 12px; }
+    .video-item video { width: 120px; height: 76px; object-fit: cover; border-radius: 8px; background: #18231f; }
+    #home-video-list .video-item { grid-template-columns: minmax(0, 1fr); gap: 10px; }
+    #home-video-list .video-item video { width: auto; height: min(75vh, 746px); max-width: 100%; aspect-ratio: 9 / 16; object-fit: cover; border-radius: 14px; }
+    .admin { width: min(100%, 940px); padding: 32px; background: white; border: 1px solid #e8ece7; border-radius: 20px; box-shadow: 0 16px 50px #263b2710; }
+    .admin-form { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 22px 0 28px; }
+    .admin-form .field { margin: 0; }
+    .admin-form .wide { grid-column: 1 / -1; }
+    .admin-form textarea { width: 100%; min-height: 92px; padding: 12px 14px; border: 1px solid #dce2dc; border-radius: 10px; font: inherit; resize: vertical; }
+    .admin-form input[type="file"] { height: auto; padding: 12px; }
+    .admin-actions { display: flex; gap: 10px; }
+    .admin-list { display: grid; gap: 12px; }
+    .admin-item { display: grid; grid-template-columns: 100px 1fr auto; align-items: center; gap: 16px; padding: 12px; border: 1px solid #e8ece7; border-radius: 12px; }
+    .admin-item img { width: 100px; height: 72px; object-fit: cover; border-radius: 8px; }
+    .admin-item h3 { margin: 0 0 5px; }
+    .admin-item p { margin: 0; color: #778078; }
+    .secondary { padding: 10px 16px; border: 1px solid #dce2dc; border-radius: 9px; background: white; color: #287653; font: inherit; cursor: pointer; }
+    .danger { color: #b33a36; }
+    .header-actions { display: flex; align-items: center; justify-content: flex-end; gap: 18px; margin-left: auto; }
+    .contact-link { padding: 8px 2px; border: 0; background: transparent; color: #3f7562; text-decoration: none; font: inherit; font-weight: 600; }
+    .contact-link:hover, .home-login:hover { text-decoration: underline; }
+    .product-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 22px; margin: 22px 0; }
+    .product-card { overflow: hidden; border: 1px solid #e4eee6; border-radius: 16px; background: #fff; box-shadow: 0 10px 28px #183e2b0c; }
+    .product-card img { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; background: #e8ece7; }
+    .product-card-body { padding: 16px; }
+    .product-card h2 { margin: 0 0 10px; font-size: 19px; }
+    .product-prices { display: flex; align-items: baseline; flex-wrap: wrap; gap: 10px; margin-bottom: 8px; }
+    .product-price { color: #287653; font-size: 20px; font-weight: 700; }
+    .product-price-old { color: #8b948c; text-decoration: line-through; }
+    .product-note { margin: 0; color: #778078; white-space: pre-wrap; overflow-wrap: anywhere; }
+    .product-admin-item { grid-template-columns: 90px 1fr auto; }
+    .product-admin-item img { width: 90px; height: 72px; }
+    .contact { width: min(100%, 760px); padding: 32px; background: white; border: 1px solid #dce9df; border-radius: 22px; box-shadow: 0 20px 60px #183e2b14; }
+    #products-page { width: min(calc(100% - 80px), 1280px); padding: 32px; }
+    .contact-details { display: grid; gap: 12px; margin-top: 26px; }
+    .copyright { width: min(calc(100% - 80px), 1280px); margin: 28px auto 18px; color: #8b928d; text-align: right; font-size: 12px; }
+    .contact-row { padding: 16px; border: 1px solid #e4eee6; border-left: 4px solid #a9d7c1; border-radius: 12px; background: linear-gradient(110deg, #f3faf6, #faf9fe); overflow-wrap: anywhere; }
+    .contact-row strong { display: block; margin-bottom: 5px; color: var(--green); }
+    .contact-form { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 22px 0 28px; }
+    .contact-form .field { margin: 0; }
+    .contact-form .wide { grid-column: 1 / -1; }
+    .contact-form textarea { width: 100%; min-height: 76px; padding: 12px 14px; border: 1px solid #dce2dc; border-radius: 10px; font: inherit; resize: vertical; }
+    @media (max-width: 700px) {
+      body { padding: 16px; align-items: start; }
+      .login { margin: auto; padding: 32px 24px; }
+      .admin, .contact { width: 100%; padding: 20px 16px; border-radius: 16px; }
+      #products-page { width: calc(100% - 32px); padding: 20px 16px; }
+      .home > :not(.site-hero) { width: calc(100% - 32px); }
+      .copyright { width: calc(100% - 32px); margin-top: 18px; }
+      .home-header { flex-wrap: wrap; }
+      .home-header h1 { font-size: 24px; }
+      .header-actions { width: 100%; justify-content: flex-end; flex-wrap: wrap; }
+      .product-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+      .product-card-body { padding: 12px; }
+      .product-card h2 { font-size: 16px; }
+      .product-price { font-size: 17px; }
+      .product-admin-item { grid-template-columns: 72px 1fr; }
+      .product-admin-item img { width: 72px; height: 60px; }
+      .site-hero { height: clamp(260px, 65vw, var(--hero-height)); margin-bottom: 24px; border-radius: 0; }
+      .site-hero-copy { width: 86%; }
+      .site-hero-copy p:last-child { margin-top: 8px; }
+      .hero-image { height: clamp(220px, 65vw, 480px); }
+      .gallery-layout { grid-template-columns: minmax(0, 1fr) 82px; gap: 8px; }
+      .thumbs { max-height: clamp(220px, 65vw, 480px); gap: 8px; }
+      .thumb { flex-basis: 70px; }
+      .admin-form, .contact-form { grid-template-columns: 1fr; }
+      .admin-form .wide, .contact-form .wide { grid-column: auto; }
+      .admin-item { grid-template-columns: 72px 1fr; }
+      .admin-item img { width: 72px; height: 60px; }
+      .admin-actions { grid-column: 1 / -1; }
+      .video-item { grid-template-columns: 82px 1fr; }
+      .video-item video { width: 82px; height: 60px; }
+      #home-video-list .video-item { grid-template-columns: minmax(0, 1fr); }
+      #home-video-list .video-item video { width: auto; height: min(75vh, 746px); max-width: 100%; aspect-ratio: 9 / 16; object-fit: cover; }
+    }
+    @media (max-width: 380px) { body { padding: 10px; } .login { padding: 28px 20px; } .contact-link, .logout { padding: 10px 12px; font-size: 14px; } }
+    @media (max-width: 480px) { .product-grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <main class="login" id="login-page" hidden>
+    <div class="mark" aria-hidden="true">✓</div>
+    <h1>ยินดีต้อนรับ</h1>
+    <p class="intro">เข้าสู่ระบบด้วยเบอร์โทรศัพท์ของคุณ</p>
+    <form id="login-form">
+      <div class="field">
+        <label for="phone">เบอร์โทรศัพท์</label>
+        <input id="phone" name="phone" type="text" inputmode="numeric" autocomplete="tel" placeholder="กรอกเบอร์โทรศัพท์ หรือ admin" required>
+      </div>
+      <div class="field">
+        <label for="password">รหัสผ่าน</label>
+        <div class="password-wrap">
+          <input id="password" name="password" type="password" autocomplete="current-password" placeholder="กรอกรหัสผ่าน" minlength="6" required>
+          <button class="toggle" id="toggle-password" type="button" aria-label="แสดงรหัสผ่าน">แสดง</button>
+        </div>
+      </div>
+      <button class="submit" type="submit">เข้าสู่ระบบ</button>
+      <p class="message" id="message" role="status" aria-live="polite"></p>
+    </form>
+  </main>
+  <main class="home" id="home-page" hidden>
+    <header class="home-header">
+      <div><h1>ฮิวมัสเมืองแม่เมาะ</h1></div>
+      <div class="header-actions"><a class="contact-link" id="contact-link" href="#contact">ติดต่อสอบถาม</a><button class="home-login" id="open-admin-login" type="button">Admin</button></div>
+    </header>
+    <section class="site-hero" id="site-hero" aria-label="ภาพหัวเว็บไซต์">
+      <img class="site-hero-image" id="site-hero-image" alt="" hidden>
+    </section>
+    <section class="video-section"><div class="video-list" id="home-video-list"></div></section>
+    <div class="gallery-layout"><img class="hero-image" id="hero-image" src="" alt=""><div class="thumbs" id="thumbs" aria-label="เลือกรูปภาพ"></div></div>
+    <section class="photo-info" aria-live="polite">
+      <h2 id="photo-title"></h2>
+      <p id="photo-description"></p>
+    </section>
+    <footer class="copyright">Copyright © 2026 Deverlop Team BJK. All rights reserved.</footer>
+  </main>
+  <main class="contact" id="products-page" hidden>
+    <header class="home-header"><div><h1>สินค้า</h1><p>รายการสินค้าและราคา</p></div><button class="text-link" id="products-back" type="button">กลับหน้าหลัก</button></header>
+    <section class="product-grid" id="product-grid" aria-live="polite"></section>
+  </main>
+  <main class="admin-login" id="admin-login-page" hidden>
+    <div class="mark" aria-hidden="true">A</div>
+    <h1>เข้าสู่ระบบ Admin</h1>
+    <p class="intro">สำหรับผู้ดูแลระบบเท่านั้น</p>
+    <form id="admin-login-form">
+      <div class="field"><label for="admin-name">ชื่อผู้ใช้</label><input id="admin-name" autocomplete="username" placeholder="ชื่อผู้ใช้ Admin"></div>
+      <div class="field"><label for="admin-password">รหัสผ่าน</label><input id="admin-password" type="password" autocomplete="current-password" placeholder="รหัสผ่าน"></div>
+      <button class="submit" type="submit">เข้าสู่ระบบ Admin</button>
+      <p class="message" id="admin-login-message" role="alert" aria-live="polite"></p>
+      <button class="text-link" id="admin-login-back" type="button">กลับหน้าหลัก</button>
+    </form>
+  </main>
+  <main class="contact" id="contact-page" hidden>
+    <header class="home-header"><div><h1>ติดต่อสอบถาม</h1><p>ช่องทางการติดต่อ</p></div><button class="text-link" id="contact-back" type="button">กลับหน้าหลัก</button></header>
+    <section class="contact-details" id="contact-details"></section>
+  </main>
+  <main class="admin" id="admin-page" hidden>
+    <header class="home-header">
+      <div><h1>จัดการรูปภาพ</h1><p>เพิ่มรูปและรายละเอียดเพื่อแสดงในหน้า Home</p></div>
+      <button class="logout" id="admin-logout" type="button">ออกจากระบบ</button>
+    </header>
+    <section>
+      <h2>ตั้งค่าภาพหัวหน้า Home</h2>
+      <p>แนะนำไฟล์แนวนอน 1920 × 640 px · ความสูงแสดงผลเริ่มต้น 400 px</p>
+      <form class="admin-form" id="header-form">
+        <div class="field wide"><label for="header-zoom">ซูมภาพ <output id="header-zoom-value">100%</output></label><input id="header-zoom" type="range" min="100" max="180" step="1" value="100"></div>
+        <div class="field wide"><label for="header-file">เลือกรูปภาพหัวเว็บ (ไม่เกิน 8 MB)</label><input id="header-file" type="file" accept="image/*"></div>
+        <div class="field"><label for="header-height">ความสูงที่แสดง (px)</label><input id="header-height" type="number" min="220" max="480" step="10" value="400" required></div>
+        <div class="field wide"><div class="header-preview" id="header-preview" aria-label="ลากภาพเพื่อปรับตำแหน่งซ้ายขวาและขึ้นลง"><img id="header-preview-image" alt="" hidden><span>ตัวอย่างภาพหัว Home · ลากภาพเพื่อจัดตำแหน่ง</span></div></div>
+        <div class="admin-actions wide"><button class="submit" type="submit" style="width:auto;padding:0 22px">บันทึกภาพหัว Home</button></div>
+        <p class="message wide" id="header-admin-message" role="status" aria-live="polite"></p>
+      </form>
+    </section>
+    <section>
+      <h2>จัดการสินค้า</h2>
+      <form class="admin-form" id="product-form">
+        <input id="edit-product-id" type="hidden" value="">
+        <div class="field"><label for="product-image">รูปสินค้า</label><input id="product-image" type="file" accept="image/*"></div>
+        <div class="field"><label for="product-name">ชื่อสินค้า</label><input id="product-name" type="text" maxlength="160" required></div>
+        <div class="field"><label for="product-price">ราคา</label><input id="product-price" type="number" min="0" step="0.01" required></div>
+        <div class="field"><label for="product-promo-price">ราคาโปรโมชั่น (เว้นว่างได้)</label><input id="product-promo-price" type="number" min="0" step="0.01"></div>
+        <div class="field wide"><label for="product-note">หมายเหตุ</label><textarea id="product-note" maxlength="2000"></textarea></div>
+        <div class="admin-actions wide"><button class="submit" type="submit" style="width:auto;padding:0 22px">บันทึกสินค้า</button><button class="secondary" id="cancel-product-edit" type="button" hidden>ยกเลิก</button></div>
+        <p class="message wide" id="product-admin-message" role="status" aria-live="polite"></p>
+      </form>
+      <div class="admin-list" id="product-admin-list"></div>
+    </section>
+    <form class="admin-form" id="photo-form">
+      <input id="edit-index" type="hidden" value="">
+      <div class="field"><label for="photo-file">เลือกรูปภาพ</label><input id="photo-file" type="file" accept="image/*"></div>
+      <div class="field"><label for="photo-name">ชื่อรูปภาพ</label><input id="photo-name" type="text" placeholder="เช่น ภูเขาในยามเช้า" required></div>
+      <div class="field wide"><label for="photo-detail">รายละเอียด</label><textarea id="photo-detail" placeholder="เขียนรายละเอียดใต้รูปภาพ" required></textarea></div>
+      <div class="admin-actions wide"><button class="submit" id="save-photo" type="submit" style="width:auto;padding:0 22px">บันทึก</button><button class="secondary" id="cancel-edit" type="button" hidden>ยกเลิกแก้ไข</button></div>
+      <p class="message wide" id="admin-message" role="status" aria-live="polite"></p>
+    </form>
+    <section>
+      <h2>ข้อมูลติดต่อ</h2>
+      <form class="contact-form" id="contact-form">
+        <div class="field"><label for="contact-address">ที่อยู่</label><textarea id="contact-address" placeholder="ที่อยู่"></textarea></div>
+        <div class="field"><label for="contact-phone">เบอร์โทร</label><input id="contact-phone" type="text" placeholder="เบอร์โทรศัพท์"></div>
+        <div class="field"><label for="contact-email">อีเมล</label><input id="contact-email" type="email" placeholder="อีเมล"></div>
+        <div class="field"><label for="contact-line">LINE ID</label><input id="contact-line" type="text" placeholder="LINE ID"></div>
+        <div class="field wide"><label for="contact-facebook">Facebook</label><input id="contact-facebook" type="text" placeholder="ลิงก์หรือชื่อ Facebook"></div>
+        <div class="field wide"><label for="contact-other">ช่องทางอื่น ๆ</label><textarea id="contact-other" placeholder="เช่น Instagram, เวลาทำการ"></textarea></div>
+        <button class="submit wide" type="submit">บันทึกข้อมูลติดต่อ</button>
+        <p class="message wide" id="contact-admin-message" role="status" aria-live="polite"></p>
+      </form>
+    </section>
+    <section class="video-section">
+      <h2>จัดการวิดีโอ</h2>
+      <form class="admin-form" id="video-form">
+        <input id="edit-video-index" type="hidden" value="">
+        <div class="field"><label for="video-file">เลือกไฟล์วิดีโอ (ไม่เกิน 5 MB)</label><input id="video-file" type="file" accept="video/*"></div>
+        <div class="admin-actions wide"><button class="submit" type="submit" style="width:auto;padding:0 22px">บันทึกวิดีโอ</button><button class="secondary" id="cancel-video-edit" type="button" hidden>ยกเลิกแก้ไข</button></div>
+        <p class="message wide" id="video-admin-message" role="status" aria-live="polite"></p>
+      </form>
+      <div class="admin-list" id="video-admin-list"></div>
+    </section>
+    <section><h2>รายการรูปภาพ</h2><div class="admin-list" id="admin-list"></div></section>
+  </main>
+  <script type="text/plain" id="legacy-script">
+    const password = document.querySelector('#password');
+    const toggle = document.querySelector('#toggle-password');
+    const starterPhotos = [
+      { title: 'ภูเขาในยามเช้า', description: 'แสงแรกของวันค่อย ๆ แตะยอดเขา ท่ามกลางหมอกบางและธรรมชาติที่เงียบสงบ', url: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1600&q=85' },
+      { title: 'ทะเลสาบกลางหุบเขา', description: 'ผืนน้ำสีฟ้าสะท้อนแนวภูเขา เป็นภาพบรรยากาศที่ชวนให้หยุดพักและผ่อนคลาย', url: 'https://images.unsplash.com/photo-1470770841072-f978cf4d019e?auto=format&fit=crop&w=1600&q=85' },
+      { title: 'ป่าสนและสายหมอก', description: 'ป่าสีเขียวทอดยาวผ่านหุบเขา พร้อมหมอกที่ปกคลุมยอดไม้ในวันที่อากาศเย็น', url: 'https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=1600&q=85' },
+      { title: 'พระอาทิตย์ตกริมทะเล', description: 'ท้องฟ้าสีอบอุ่นและคลื่นทะเลเบา ๆ ส่งท้ายวันอย่างเรียบง่าย', url: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1600&q=85' }
+    ];
+    let photos;
+    try {
+      const savedPhotos = JSON.parse(localStorage.getItem('gallery-photos'));
+      photos = Array.isArray(savedPhotos) ? savedPhotos : starterPhotos;
+    } catch {
+      photos = starterPhotos;
+    }
+    let videos;
+    try {
+      const savedVideos = JSON.parse(localStorage.getItem('gallery-videos'));
+      videos = Array.isArray(savedVideos) ? savedVideos : [];
+    } catch { videos = []; }
+    const loginPage = document.querySelector('#login-page');
+    const adminLoginPage = document.querySelector('#admin-login-page');
+    const homePage = document.querySelector('#home-page');
+    const adminPage = document.querySelector('#admin-page');
+    const contactPage = document.querySelector('#contact-page');
+    const heroImage = document.querySelector('#hero-image');
+    const thumbs = document.querySelector('#thumbs');
+    const contactDefaults = { address: '', phone: '', email: '', line: '', facebook: '', other: '' };
+    let contactInfo;
+    try { contactInfo = { ...contactDefaults, ...JSON.parse(localStorage.getItem('contact-info') || '{}') }; }
+    catch { contactInfo = { ...contactDefaults }; }
+
+    function renderContact() {
+      const items = [
+        ['ที่อยู่', contactInfo.address], ['เบอร์โทร', contactInfo.phone], ['อีเมล', contactInfo.email],
+        ['LINE ID', contactInfo.line], ['Facebook', contactInfo.facebook], ['ช่องทางอื่น ๆ', contactInfo.other]
+      ].filter(([, value]) => value && value.trim());
+      const container = document.querySelector('#contact-details');
+      container.replaceChildren();
+      if (!items.length) {
+        const empty = document.createElement('p');
+        empty.textContent = 'ยังไม่มีข้อมูลติดต่อ';
+        container.append(empty);
+        return;
+      }
+      items.forEach(([label, value]) => {
+        const row = document.createElement('div');
+        row.className = 'contact-row';
+        const heading = document.createElement('strong');
+        heading.textContent = label;
+        const content = document.createElement('div');
+        content.textContent = value;
+        content.style.whiteSpace = 'pre-wrap';
+        row.append(heading, content);
+        container.append(row);
+      });
+    }
+    function fillContactForm() {
+      document.querySelector('#contact-address').value = contactInfo.address;
+      document.querySelector('#contact-phone').value = contactInfo.phone;
+      document.querySelector('#contact-email').value = contactInfo.email;
+      document.querySelector('#contact-line').value = contactInfo.line;
+      document.querySelector('#contact-facebook').value = contactInfo.facebook;
+      document.querySelector('#contact-other').value = contactInfo.other;
+    }
+    renderContact();
+    fillContactForm();
+
+    function persistPhotos() {
+      try {
+        localStorage.setItem('gallery-photos', JSON.stringify(photos));
+        return true;
+      } catch {
+        document.querySelector('#admin-message').textContent = 'พื้นที่จัดเก็บไม่พอ กรุณาใช้รูปภาพขนาดเล็กลง';
+        return false;
+      }
+    }
+
+    function persistVideos() {
+      try {
+        localStorage.setItem('gallery-videos', JSON.stringify(videos));
+        return true;
+      } catch {
+        document.querySelector('#video-admin-message').textContent = 'พื้นที่จัดเก็บไม่พอ กรุณาใช้ไฟล์วิดีโอขนาดเล็กลง';
+        return false;
+      }
+    }
+
+    function renderVideos() {
+      const homeList = document.querySelector('#home-video-list');
+      const adminList = document.querySelector('#video-admin-list');
+      const player = document.querySelector('#video-player');
+      homeList.replaceChildren();
+      adminList.replaceChildren();
+      if (!videos.length) return;
+      videos.forEach((video, index) => {
+        const homeItem = document.createElement('article');
+        homeItem.className = 'video-item';
+        const preview = document.createElement('video');
+        preview.src = video.url;
+        preview.preload = 'metadata';
+        preview.autoplay = true;
+        preview.muted = true;
+        preview.loop = true;
+        preview.playsInline = true;
+        preview.controls = true;
+        homeItem.append(preview);
+        homeList.append(homeItem);
+
+        const adminItem = document.createElement('article');
+        adminItem.className = 'video-item';
+        const adminPreview = document.createElement('video');
+        adminPreview.src = video.url;
+        adminPreview.preload = 'metadata';
+        const actions = document.createElement('div');
+        actions.className = 'admin-actions';
+        const edit = document.createElement('button');
+        edit.className = 'secondary';
+        edit.type = 'button';
+        edit.textContent = 'แก้ไข';
+        edit.addEventListener('click', () => {
+          document.querySelector('#edit-video-index').value = String(index);
+          document.querySelector('#cancel-video-edit').hidden = false;
+          document.querySelector('#video-form').scrollIntoView({ behavior: 'smooth' });
+        });
+        const remove = document.createElement('button');
+        remove.className = 'secondary danger';
+        remove.type = 'button';
+        remove.textContent = 'ลบ';
+        remove.addEventListener('click', () => {
+          videos.splice(index, 1);
+          persistVideos();
+          renderVideos();
+        });
+        actions.append(edit, remove);
+        adminItem.append(adminPreview, actions);
+        adminList.append(adminItem);
+      });
+    }
+
+    function renderGallery() {
+      thumbs.replaceChildren();
+      photos.forEach((photo, index) => {
+        const button = document.createElement('button');
+        button.className = 'thumb';
+        button.type = 'button';
+        button.setAttribute('aria-label', `ดูรูป ${photo.title}`);
+        button.setAttribute('aria-pressed', 'false');
+        const image = document.createElement('img');
+        image.src = photo.url;
+        image.alt = '';
+        image.loading = 'lazy';
+        button.append(image);
+        button.addEventListener('click', () => selectPhoto(index));
+        thumbs.append(button);
+      });
+      if (photos.length) selectPhoto(0);
+      else {
+        heroImage.removeAttribute('src');
+        heroImage.alt = 'ยังไม่มีรูปภาพ';
+        document.querySelector('#photo-title').textContent = 'ยังไม่มีรูปภาพ';
+        document.querySelector('#photo-description').textContent = 'ผู้ดูแลระบบสามารถเพิ่มรูปได้จากหน้า Admin';
+      }
+    }
+
+    function selectPhoto(index) {
+      const photo = photos[index];
+      if (!photo) return;
+      heroImage.src = photo.url;
+      heroImage.alt = photo.title;
+      document.querySelector('#photo-title').textContent = photo.title;
+      document.querySelector('#photo-description').textContent = photo.description;
+      document.querySelectorAll('.thumb').forEach((button, buttonIndex) => {
+        button.setAttribute('aria-pressed', String(buttonIndex === index));
+      });
+    }
+
+    renderGallery();
+    renderVideos();
+
+    function renderAdminList() {
+      const list = document.querySelector('#admin-list');
+      list.replaceChildren();
+      photos.forEach((photo, index) => {
+        const item = document.createElement('article');
+        item.className = 'admin-item';
+        const image = document.createElement('img');
+        image.src = photo.url;
+        image.alt = '';
+        const details = document.createElement('div');
+        const title = document.createElement('h3');
+        title.textContent = photo.title;
+        const description = document.createElement('p');
+        description.textContent = photo.description;
+        details.append(title, description);
+        const actions = document.createElement('div');
+        actions.className = 'admin-actions';
+        const edit = document.createElement('button');
+        edit.className = 'secondary';
+        edit.type = 'button';
+        edit.textContent = 'แก้ไข';
+        edit.addEventListener('click', () => {
+          document.querySelector('#edit-index').value = String(index);
+          document.querySelector('#photo-name').value = photo.title;
+          document.querySelector('#photo-detail').value = photo.description;
+          document.querySelector('#cancel-edit').hidden = false;
+          document.querySelector('#photo-form').scrollIntoView({ behavior: 'smooth' });
+        });
+        const remove = document.createElement('button');
+        remove.className = 'secondary danger';
+        remove.type = 'button';
+        remove.textContent = 'ลบ';
+        remove.addEventListener('click', () => {
+          photos.splice(index, 1);
+          persistPhotos();
+          renderAdminList();
+          renderGallery();
+        });
+        actions.append(edit, remove);
+        item.append(image, details, actions);
+        list.append(item);
+      });
+    }
+    renderAdminList();
+
+    toggle.addEventListener('click', () => {
+      const showing = password.type === 'password';
+      password.type = showing ? 'text' : 'password';
+      toggle.textContent = showing ? 'ซ่อน' : 'แสดง';
+      toggle.setAttribute('aria-label', showing ? 'ซ่อนรหัสผ่าน' : 'แสดงรหัสผ่าน');
+    });
+
+    document.querySelector('#open-admin-login').addEventListener('click', () => {
+      homePage.hidden = true;
+      adminLoginPage.hidden = false;
+      document.title = 'เข้าสู่ระบบ Admin';
+      window.scrollTo(0, 0);
+    });
+    document.querySelector('#admin-login-back').addEventListener('click', () => {
+      adminLoginPage.hidden = true;
+      homePage.hidden = false;
+      document.title = 'Home';
+    });
+    document.querySelector('#admin-login-form').addEventListener('submit', (event) => {
+      event.preventDefault();
+      const name = document.querySelector('#admin-name').value.trim().toLowerCase();
+      const adminPassword = document.querySelector('#admin-password').value;
+      if (name !== 'admin' || adminPassword !== 'adminadmin') {
+        document.querySelector('#admin-login-message').textContent = 'ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง';
+        return;
+      }
+      adminLoginPage.hidden = true;
+      adminPage.hidden = false;
+      document.title = 'Admin';
+      renderAdminList();
+      renderVideos();
+      window.scrollTo(0, 0);
+    });
+
+    document.querySelector('#contact-link').addEventListener('click', (event) => {
+      event.preventDefault();
+      homePage.hidden = true;
+      contactPage.hidden = false;
+      renderContact();
+      document.title = 'ติดต่อสอบถาม';
+      window.scrollTo(0, 0);
+    });
+    document.querySelector('#contact-back').addEventListener('click', () => {
+      contactPage.hidden = true;
+      homePage.hidden = false;
+      document.title = 'Home';
+      window.scrollTo(0, 0);
+    });
+    document.querySelector('#contact-form').addEventListener('submit', (event) => {
+      event.preventDefault();
+      contactInfo = {
+        address: document.querySelector('#contact-address').value.trim(),
+        phone: document.querySelector('#contact-phone').value.trim(),
+        email: document.querySelector('#contact-email').value.trim(),
+        line: document.querySelector('#contact-line').value.trim(),
+        facebook: document.querySelector('#contact-facebook').value.trim(),
+        other: document.querySelector('#contact-other').value.trim()
+      };
+      try {
+        localStorage.setItem('contact-info', JSON.stringify(contactInfo));
+        document.querySelector('#contact-admin-message').textContent = 'บันทึกข้อมูลติดต่อแล้ว';
+        renderContact();
+      } catch {
+        document.querySelector('#contact-admin-message').textContent = 'บันทึกไม่สำเร็จ พื้นที่จัดเก็บอาจไม่เพียงพอ';
+      }
+    });
+
+    document.querySelector('#photo-form').addEventListener('submit', (event) => {
+      event.preventDefault();
+      const file = document.querySelector('#photo-file').files[0];
+      const editIndex = document.querySelector('#edit-index').value;
+      const existing = editIndex === '' ? null : photos[Number(editIndex)];
+      if (!existing && !file) {
+        document.querySelector('#admin-message').textContent = 'กรุณาเลือกรูปภาพ';
+        return;
+      }
+      const savePhoto = (url) => {
+        const photo = { title: document.querySelector('#photo-name').value.trim(), description: document.querySelector('#photo-detail').value.trim(), url };
+        if (existing) photos[Number(editIndex)] = photo;
+        else photos.push(photo);
+        if (!persistPhotos()) return;
+        document.querySelector('#photo-form').reset();
+        document.querySelector('#edit-index').value = '';
+        document.querySelector('#cancel-edit').hidden = true;
+        document.querySelector('#admin-message').textContent = 'บันทึกรูปภาพแล้ว';
+        renderAdminList();
+        renderGallery();
+      };
+      if (file) {
+        const reader = new FileReader();
+        reader.addEventListener('load', () => savePhoto(reader.result));
+        reader.addEventListener('error', () => { document.querySelector('#admin-message').textContent = 'อ่านไฟล์รูปภาพไม่สำเร็จ'; });
+        reader.readAsDataURL(file);
+      } else savePhoto(existing.url);
+    });
+
+    document.querySelector('#cancel-edit').addEventListener('click', () => {
+      document.querySelector('#photo-form').reset();
+      document.querySelector('#edit-index').value = '';
+      document.querySelector('#cancel-edit').hidden = true;
+      document.querySelector('#admin-message').textContent = '';
+    });
+
+    document.querySelector('#video-form').addEventListener('submit', (event) => {
+      event.preventDefault();
+      const file = document.querySelector('#video-file').files[0];
+      const editIndex = document.querySelector('#edit-video-index').value;
+      const existing = editIndex === '' ? null : videos[Number(editIndex)];
+      if (file && file.size > 5 * 1024 * 1024) {
+        document.querySelector('#video-admin-message').textContent = 'ไฟล์วิดีโอต้องมีขนาดไม่เกิน 5 MB';
+        return;
+      }
+      if (!existing && !file) {
+        document.querySelector('#video-admin-message').textContent = 'กรุณาเลือกไฟล์วิดีโอ';
+        return;
+      }
+      const saveVideo = (url) => {
+        const video = { title: file ? file.name : existing.title, description: existing ? existing.description || '' : '', url };
+        if (existing) videos[Number(editIndex)] = video;
+        else videos.push(video);
+        if (!persistVideos()) return;
+        document.querySelector('#video-form').reset();
+        document.querySelector('#edit-video-index').value = '';
+        document.querySelector('#cancel-video-edit').hidden = true;
+        document.querySelector('#video-admin-message').textContent = 'บันทึกวิดีโอแล้ว';
+        renderVideos();
+      };
+      if (file) {
+        const reader = new FileReader();
+        reader.addEventListener('load', () => saveVideo(reader.result));
+        reader.addEventListener('error', () => { document.querySelector('#video-admin-message').textContent = 'อ่านไฟล์วิดีโอไม่สำเร็จ'; });
+        reader.readAsDataURL(file);
+      } else saveVideo(existing.url);
+    });
+
+    document.querySelector('#cancel-video-edit').addEventListener('click', () => {
+      document.querySelector('#video-form').reset();
+      document.querySelector('#edit-video-index').value = '';
+      document.querySelector('#cancel-video-edit').hidden = true;
+      document.querySelector('#video-admin-message').textContent = '';
+    });
+
+    document.querySelector('#admin-logout').addEventListener('click', () => {
+      adminPage.hidden = true;
+      homePage.hidden = false;
+      document.querySelector('#admin-login-form').reset();
+      document.title = 'Home';
+      window.scrollTo(0, 0);
+    });
+    homePage.hidden = false;
+    renderGallery();
+  </script>
+  <script src="client.js" defer></script>
+</body>
+</html>
