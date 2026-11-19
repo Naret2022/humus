@@ -52,6 +52,77 @@ function renderSiteHeader() {
   }
 }
 
+function getWebUrl(value) {
+  const text = String(value || '').trim();
+  if (!text) return '';
+  const candidate = /^(https?:\/\/|www\.)/i.test(text) ? text : (/^[\w.-]+\.[a-z]{2,}(\/|$)/i.test(text) ? `https://${text}` : '');
+  if (!candidate) return '';
+  try {
+    const url = new URL(candidate.startsWith('www.') ? `https://${candidate}` : candidate);
+    return ['http:', 'https:'].includes(url.protocol) ? url.href : '';
+  } catch { return ''; }
+}
+
+function externalLink(label, href) {
+  const link = document.createElement('a');
+  link.href = href;
+  link.textContent = label;
+  link.target = '_blank';
+  link.rel = 'noopener noreferrer';
+  return link;
+}
+
+function appendLinkifiedText(container, text) {
+  const pattern = /(?:https?:\/\/|www\.)[^\s<>]+/gi;
+  let cursor = 0;
+  for (const match of text.matchAll(pattern)) {
+    const raw = match[0];
+    const urlText = raw.replace(/[.,!?;:)\]}]+$/, '');
+    const href = getWebUrl(urlText);
+    if (!href) continue;
+    container.append(document.createTextNode(text.slice(cursor, match.index)));
+    container.append(externalLink(urlText, href));
+    cursor = match.index + urlText.length;
+  }
+  container.append(document.createTextNode(text.slice(cursor)));
+}
+
+function renderContactValue(container, key, rawValue) {
+  const value = String(rawValue || '').trim();
+  if (!value) return;
+  if (key === 'phone') {
+    const number = value.replace(/[^\d+*#,;]/g, '');
+    const link = document.createElement('a');
+    link.href = `tel:${number}`;
+    link.textContent = value;
+    container.append(link);
+    return;
+  }
+  if (key === 'email') {
+    const link = document.createElement('a');
+    link.href = `mailto:${value}`;
+    link.textContent = value;
+    container.append(link);
+    return;
+  }
+  if (key === 'line') {
+    const url = getWebUrl(value);
+    const id = value.startsWith('@') ? value : `@${value}`;
+    container.append(externalLink(value, url || `https://line.me/R/ti/p/${encodeURIComponent(id)}`));
+    return;
+  }
+  if (key === 'facebook') {
+    const url = getWebUrl(value);
+    const handle = value.replace(/^@/, '');
+    const facebookUrl = url || (/^[\w.]+$/.test(handle)
+      ? `https://www.facebook.com/${encodeURIComponent(handle)}`
+      : `https://www.facebook.com/search/top/?q=${encodeURIComponent(value)}`);
+    container.append(externalLink(value, facebookUrl));
+    return;
+  }
+  appendLinkifiedText(container, value);
+}
+
 function renderContact() {
   const labels = [['ที่อยู่', 'address'], ['เบอร์โทร', 'phone'], ['อีเมล', 'email'], ['LINE ID', 'line'], ['Facebook', 'facebook'], ['ช่องทางอื่น ๆ', 'other']];
   const container = $('#contact-details');
@@ -69,7 +140,7 @@ function renderContact() {
     const heading = document.createElement('strong');
     heading.textContent = label;
     const value = document.createElement('div');
-    value.textContent = state.contact[key];
+    renderContactValue(value, key, state.contact[key]);
     value.style.whiteSpace = 'pre-wrap';
     row.append(heading, value);
     container.append(row);
