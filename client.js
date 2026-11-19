@@ -95,6 +95,11 @@ function renderProducts() {
     image.src = product.imageData;
     image.alt = product.name;
     image.loading = 'lazy';
+    image.addEventListener('click', () => {
+      $('#product-image-full').src = product.imageData;
+      $('#product-image-full').alt = product.name;
+      $('#product-image-dialog').showModal();
+    });
     const body = document.createElement('div');
     body.className = 'product-card-body';
     const name = document.createElement('h2');
@@ -124,6 +129,11 @@ function renderProducts() {
   }
   renderAdminProducts();
 }
+
+$('#product-image-close').addEventListener('click', () => $('#product-image-dialog').close());
+$('#product-image-dialog').addEventListener('click', (event) => {
+  if (event.target === $('#product-image-dialog')) $('#product-image-dialog').close();
+});
 
 function renderAdminProducts() {
   const list = $('#product-admin-list');
